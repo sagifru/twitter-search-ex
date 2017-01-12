@@ -5,6 +5,7 @@ import android.util.Base64;
 import android.util.Log;
 
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.example.twitter_search.volley.JsonObjectHeadersRequest;
@@ -39,12 +40,17 @@ public class OAuthHandler {
     private static final String ACCESS_TOKEN = "access_token";
 
     private String mAccessToken;
+    private RequestListener mListener;
 
     private OAuthHandler() {
     }
 
     public static OAuthHandler getInstance() {
         return OAuthHandlerHolder.INSTANCE;
+    }
+
+    public void setRequestListener(RequestListener l) {
+        mListener = l;
     }
 
     /**
@@ -59,6 +65,8 @@ public class OAuthHandler {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
+                        Exception ex = null;
+
                         try {
                             // Parse the response
                             if (response.has(TOKEN_TYPE) && response.has(ACCESS_TOKEN)) {
@@ -70,6 +78,15 @@ public class OAuthHandler {
                             }
                         } catch (JSONException je) {
                             Log.e(LOG_TAG, "Failed processing the token response correctly", je);
+                            ex = je;
+                        }
+
+                        if (mListener != null) {
+                            if (ex != null) {
+                                mListener.onRequestFailure(ex);
+                            } else {
+                                mListener.onRequestSuccess();
+                            }
                         }
                     }
                 },
@@ -77,6 +94,7 @@ public class OAuthHandler {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e(LOG_TAG, "Failed requesting access token", error);
+                        mListener.onRequestFailure(error);
                     }
                 });
 
@@ -98,6 +116,9 @@ public class OAuthHandler {
         // Encode the data using Base64
         String base64Str = Base64.encodeToString(concatenatedStr.getBytes(), 0);
 
+        // Make sure to remove \n characters
+        base64Str = base64Str.replace("\n", "");
+
         // Add headers to the request
         request.addHeader(AUTHORIZATION_HEADER_KEY, base64Str);
         request.addHeader(CONTENT_TYPE_HEADER_KEY, CONTENT_TYPE_HEADER_VALUE);
@@ -117,5 +138,13 @@ public class OAuthHandler {
      */
     private static class OAuthHandlerHolder {
         static OAuthHandler INSTANCE = new OAuthHandler();
+    }
+
+    /**
+     * Listener for when generating access token is finished
+     */
+    public interface RequestListener {
+        void onRequestSuccess();
+        void onRequestFailure(Exception ex);
     }
 }

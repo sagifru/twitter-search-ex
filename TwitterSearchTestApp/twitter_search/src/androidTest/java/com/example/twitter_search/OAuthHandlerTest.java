@@ -23,11 +23,20 @@ public class OAuthHandlerTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
         RequestQueueMngr.getInstance(appContext);
 
-        OAuthHandler oAuthHandler = OAuthHandler.getInstance();
+        final OAuthHandler oAuthHandler = OAuthHandler.getInstance();
+        oAuthHandler.setRequestListener(new OAuthHandler.RequestListener() {
+            @Override
+            public void onRequestSuccess() {
+                assertNotNull(oAuthHandler.getAccessToken());
+            }
+
+            @Override
+            public void onRequestFailure(Exception ex) {
+                assertNotNull(oAuthHandler.getAccessToken());
+            }
+        });
 
         // Initiate access token generation
         oAuthHandler.generateNewToken(appContext);
-
-        assertNotNull(oAuthHandler.getAccessToken());
     }
 }
