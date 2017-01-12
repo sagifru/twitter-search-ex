@@ -31,6 +31,7 @@ public class OAuthHandler {
     private static final String OAUTH_REQUEST_URL = "https://api.twitter.com/oauth2/token";
 
     private static final String AUTHORIZATION_HEADER_KEY = "Authorization";
+    private static final String AUTHORIZATION_HEADER_VALUE = "Basic ";
     private static final String CONTENT_TYPE_HEADER_KEY = "Content-Type";
     private static final String CONTENT_TYPE_HEADER_VALUE = "application/x-www-form-urlencoded;charset=UTF-8";
     private static final String REQUEST_STRING_BODY = "grant_type=client_credentials";
@@ -94,7 +95,10 @@ public class OAuthHandler {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e(LOG_TAG, "Failed requesting access token", error);
-                        mListener.onRequestFailure(error);
+
+                        if (mListener != null) {
+                            mListener.onRequestFailure(error);
+                        }
                     }
                 });
 
@@ -120,7 +124,7 @@ public class OAuthHandler {
         base64Str = base64Str.replace("\n", "");
 
         // Add headers to the request
-        request.addHeader(AUTHORIZATION_HEADER_KEY, base64Str);
+        request.addHeader(AUTHORIZATION_HEADER_KEY, AUTHORIZATION_HEADER_VALUE + base64Str);
         request.addHeader(CONTENT_TYPE_HEADER_KEY, CONTENT_TYPE_HEADER_VALUE);
     }
 
