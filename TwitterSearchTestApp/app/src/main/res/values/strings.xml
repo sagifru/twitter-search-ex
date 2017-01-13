@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">TwitterSearchTestApp</string>
+    <string name="search_action">Search</string>
 </resources>
