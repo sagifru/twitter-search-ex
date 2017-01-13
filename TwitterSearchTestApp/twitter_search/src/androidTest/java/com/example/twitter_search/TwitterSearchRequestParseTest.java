@@ -175,6 +175,7 @@ public class TwitterSearchRequestParseTest {
         Assert.assertNotNull(tweet.getCreatedAt());
         Assert.assertNotNull(tweet.getUserName());
         Assert.assertNotNull(tweet.getText());
+        Assert.assertNotNull(tweet.getProfileImageUrl());
     }
 
     @Test

@@ -13,6 +13,7 @@ public class Tweet {
     private String mText;
     private Date mCreatedAt;
     private String mUserName;
+    private String mProfileImageUrl;
 
     public void setText(String text) {
         this.mText = text;
@@ -37,5 +38,14 @@ public class Tweet {
 
     public void setUserName(String mUserName) {
         this.mUserName = mUserName;
+    }
+
+
+    public String getProfileImageUrl() {
+        return mProfileImageUrl;
+    }
+
+    public void setProfileImageUrl(String mProfileImageUrl) {
+        this.mProfileImageUrl = mProfileImageUrl;
     }
 }

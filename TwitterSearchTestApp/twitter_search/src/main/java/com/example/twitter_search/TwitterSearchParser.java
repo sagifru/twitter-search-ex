@@ -58,6 +58,7 @@ public class TwitterSearchParser {
                     JSONObject user = currTweet.getJSONObject("user");
                     if (user != null) {
                         tweet.setUserName(user.getString("name"));
+                        tweet.setProfileImageUrl(user.getString("profile_image_url"));
                     }
 
                     retVal.add(tweet);

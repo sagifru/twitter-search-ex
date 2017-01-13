@@ -7,7 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.volley.toolbox.ImageLoader;
 import com.example.twitter_search.model.Tweet;
+import com.example.twitter_search.volley.RequestQueueMngr;
 
 import java.util.List;
 
@@ -20,9 +22,14 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetViewHolder> {
     private LayoutInflater mInflater;
     private Context mContext;
 
+    private ImageLoader mImageLoader;
+
     public TweetAdapter(Context ctx) {
         mContext = ctx;
         mInflater = LayoutInflater.from(ctx);
+
+        // Get reference to the image loader
+        mImageLoader = RequestQueueMngr.getInstance(ctx).getImageLoader();
     }
 
     @Override
@@ -44,6 +51,9 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetViewHolder> {
         CharSequence formatDate = DateUtils.getRelativeDateTimeString(mContext, tweet.getCreatedAt().getTime(), DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS,
                 DateUtils.FORMAT_ABBREV_ALL);
         holder.dateTxt.setText(formatDate);
+
+        // Set the image to load
+        holder.profileImage.setImageUrl(tweet.getProfileImageUrl(), mImageLoader);
     }
 
     @Override
