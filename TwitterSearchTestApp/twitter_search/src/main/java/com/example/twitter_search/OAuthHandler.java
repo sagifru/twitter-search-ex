@@ -26,8 +26,6 @@ import org.json.JSONObject;
 public class OAuthHandler {
     private static final String LOG_TAG = OAuthHandler.class.getName();
 
-    private static final String CONSUMER_KEY = "98ZDjZnG8nr9a95aRA2mducVG";
-    private static final String CONSUMER_SECRET = "pUkGxH6RY3jYv910egOaoSvXRjKcBqfkveMueYRDsvN9fNWANQ";
     private static final String OAUTH_REQUEST_URL = "https://api.twitter.com/oauth2/token";
 
     private static final String AUTHORIZATION_HEADER_KEY = "Authorization";
@@ -40,6 +38,9 @@ public class OAuthHandler {
     private static final String BEARER = "bearer";
     private static final String ACCESS_TOKEN = "access_token";
 
+    private String mConsumerKey;
+    private String mConsumerSecret;
+
     private String mAccessToken;
     private RequestListener mListener;
 
@@ -48,6 +49,11 @@ public class OAuthHandler {
 
     public static OAuthHandler getInstance() {
         return OAuthHandlerHolder.INSTANCE;
+    }
+
+    public void initConsumerData(String key, String secret) {
+        mConsumerKey = key;
+        mConsumerSecret = secret;
     }
 
     public void setRequestListener(RequestListener l) {
@@ -115,7 +121,7 @@ public class OAuthHandler {
         // Instead of URL encoding these fields every time - I'm just gonna assume I've already
         // encoded them beforehand, and I'm holding them URL encoded.
 
-        String concatenatedStr = CONSUMER_KEY + ":" + CONSUMER_SECRET;
+        String concatenatedStr = mConsumerKey + ":" + mConsumerSecret;
 
         // Encode the data using Base64
         String base64Str = Base64.encodeToString(concatenatedStr.getBytes(), 0);

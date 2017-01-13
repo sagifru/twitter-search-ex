@@ -38,6 +38,7 @@ public class TwitterSearchRequestParseTest {
         final RequestQueueMngr requestMngr = RequestQueueMngr.getInstance(appContext);
 
         final OAuthHandler oAuthHandler = OAuthHandler.getInstance();
+        oAuthHandler.initConsumerData(CommonTestsData.CONSUMER_KEY, CommonTestsData.CONSUMER_SECRET);
         oAuthHandler.setRequestListener(new OAuthHandler.RequestListener() {
             @Override
             public void onRequestSuccess() {
