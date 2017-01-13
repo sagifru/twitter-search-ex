@@ -173,7 +173,33 @@ public class TwitterSearchRequestParseTest {
 
         Tweet tweet = tweets.get(0);
         Assert.assertNotNull(tweet.getCreatedAt());
-        Assert.assertEquals("Sarah Ashleigh", tweet.getUserName());
-        Assert.assertEquals("Dumbass honestly thinks he gonna get away with something \uD83D\uDE02 #tryme #testme https://t.co/GVaaj43OF6", tweet.getText());
+        Assert.assertNotNull(tweet.getUserName());
+        Assert.assertNotNull(tweet.getText());
+    }
+
+    @Test
+    public void testTwitterSearchFlow() throws Exception {
+        Context appContext = InstrumentationRegistry.getTargetContext();
+        final CountDownLatch signal = new CountDownLatch(1);
+
+        TwitterSearch search = new TwitterSearch(CommonTestsData.CONSUMER_KEY, CommonTestsData.CONSUMER_SECRET);
+        search.executeSearch(appContext, "#testme", new TwitterSearch.TwitterSearchListener() {
+            @Override
+            public void onSearchResult(List<Tweet> resultTweets) {
+                Tweet tweet = resultTweets.get(0);
+                Assert.assertNotNull(tweet.getCreatedAt());
+                Assert.assertNotNull(tweet.getUserName());
+                Assert.assertNotNull(tweet.getText());
+                signal.countDown();
+            }
+
+            @Override
+            public void onSearchError(Exception ex) {
+                fail();
+                signal.countDown();
+            }
+        });
+
+        signal.await();
     }
 }

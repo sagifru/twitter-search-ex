@@ -139,7 +139,7 @@ public class OAuthHandler {
     }
 
     public boolean hasAccessToken() {
-        return (mAccessToken == null);
+        return (mAccessToken != null);
     }
 
     /**
